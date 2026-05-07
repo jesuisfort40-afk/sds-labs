@@ -19,7 +19,7 @@ class CoursFragment : Fragment() {
     private var _binding: FragmentCoursBinding? = null
     private val binding get() = _binding!!
 
-    private var currentLessonIndex = 2  // FIX: default to lesson 3 (index 2) as per original
+    private var currentLessonIndex = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,33 +58,34 @@ class CoursFragment : Fragment() {
 
     private fun setupSidebar() {
         binding.sidebarContainer.removeAllViews()
-        LessonData.lessons.forEachIndexed { index, lesson ->
-            val item = LayoutInflater.from(requireContext())
-                .inflate(R.layout.item_sidebar_lesson, binding.sidebarContainer, false)
+        val xpManager = (requireActivity() as MainActivity).xpManager
 
-            val xpManager = (requireActivity() as MainActivity).xpManager
-            val isDone = xpManager.isLessonCompleted(index)
-            val isCurrent = index == currentLessonIndex
+        val currentLesson = LessonData.lessons.getOrNull(currentLessonIndex) ?: return
+        val currentModule = LessonData.modules.find { it.index == currentLesson.moduleIndex }
+            ?: LessonData.modules[0]
 
-            val tvTitle = item.findViewById<TextView>(R.id.tvSidebarTitle)
-            val tvIcon = item.findViewById<TextView>(R.id.tvSidebarIcon)
+        val start = currentModule.lessonStartIndex
+        val end = start + currentModule.lessonCount
 
-            tvTitle.text = lesson.title
-            tvIcon.text = when {
-                isDone -> "✓"
+        // Render progress dots: ● done, ▶ current, ○ todo
+        for (i in start until minOf(end, LessonData.lessons.size)) {
+            val dot = android.widget.TextView(requireContext())
+            val isDone = xpManager.isLessonCompleted(i)
+            val isCurrent = i == currentLessonIndex
+            dot.text = when {
+                isDone    -> "●"
                 isCurrent -> "▶"
-                else -> "○"
+                else      -> "○"
             }
-
-            if (isCurrent) {
-                item.setBackgroundColor(Color.parseColor("#0A1929"))
-                tvTitle.setTextColor(Color.parseColor("#00d4ff"))
-            } else if (isDone) {
-                tvTitle.setTextColor(Color.parseColor("#10b981"))
-            }
-
-            item.setOnClickListener { loadLesson(index) }
-            binding.sidebarContainer.addView(item)
+            dot.textSize = 14f
+            dot.setPadding(0, 0, 10, 0)
+            dot.setTextColor(android.graphics.Color.parseColor(when {
+                isDone    -> "#10b981"
+                isCurrent -> "#00d4ff"
+                else      -> "#334155"
+            }))
+            dot.setOnClickListener { loadLesson(i) }
+            binding.sidebarContainer.addView(dot)
         }
     }
 
@@ -96,9 +97,12 @@ class CoursFragment : Fragment() {
         val xpManager = (requireActivity() as MainActivity).xpManager
         xpManager.setCurrentLesson(index)
 
+        val mod = LessonData.modules.find { it.index == lesson.moduleIndex }
+        val lessonNum = index - (mod?.lessonStartIndex ?: 0) + 1
+
         binding.tvLessonTitle.text = lesson.title
         binding.tvLessonDesc.text = lesson.description
-        binding.tvBreadcrumb.text = "Module 03 › Leçon ${index + 1}"
+        binding.tvBreadcrumb.text = "Module ${mod?.number ?: "?"} › Leçon $lessonNum"
 
         // Render content using WebView for proper HTML/code display
         val styledHtml = buildStyledHtml(lesson.htmlContent)
