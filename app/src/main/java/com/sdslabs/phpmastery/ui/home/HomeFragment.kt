@@ -61,14 +61,19 @@ class HomeFragment : Fragment() {
         val inflater = LayoutInflater.from(requireContext())
         val card = inflater.inflate(R.layout.item_module_card, binding.modulesContainer, false)
 
+        val xpManager = (requireActivity() as MainActivity).xpManager
+        val start = module.lessonStartIndex
+        val end = start + module.lessonCount
+        val allDone = module.lessonCount > 0 && (start until end).all { xpManager.isLessonCompleted(it) }
+
         card.findViewById<TextView>(R.id.tvModuleNum).text =
-            "MODULE ${module.number}${if (module.isCompleted) " ✓" else if (module.isLocked) " 🔒" else ""}"
+            "MODULE ${module.number}${if (allDone) " ✓" else if (module.isLocked) " 🔒" else ""}"
 
         card.findViewById<TextView>(R.id.tvModuleTitle).text = module.title
         card.findViewById<TextView>(R.id.tvModuleDesc).text = module.description
 
         val tagView = card.findViewById<TextView>(R.id.tvModuleTag)
-        tagView.text = module.tag
+        tagView.text = if (allDone) "Complété" else module.tag
         when (module.tagColor) {
             "green" -> tagView.setTextColor(Color.parseColor("#10b981"))
             "cyan" -> tagView.setTextColor(Color.parseColor("#00d4ff"))
@@ -80,7 +85,10 @@ class HomeFragment : Fragment() {
             card.alpha = 0.5f
         } else {
             card.setOnClickListener {
-                (requireActivity() as MainActivity).navigateTo(R.id.nav_cours)
+                val activity = requireActivity() as MainActivity
+                activity.navigateTo(R.id.nav_cours)
+                // Open the first lesson of this module
+                activity.openLesson(module.lessonStartIndex)
             }
         }
 
