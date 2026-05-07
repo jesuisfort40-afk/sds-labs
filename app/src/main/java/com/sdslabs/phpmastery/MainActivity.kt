@@ -55,6 +55,15 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.selectedItemId = fragmentId
     }
 
+    fun openLesson(lessonIndex: Int) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (fragment is CoursFragment) {
+            fragment.loadLesson(lessonIndex)
+        } else {
+            xpManager.setCurrentLesson(lessonIndex)
+        }
+    }
+
     fun updateXPDisplay() {
         binding.tvXpCount.text = "${xpManager.getXP()} XP"
     }
