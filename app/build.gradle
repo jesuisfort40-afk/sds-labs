@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.sdslabs.phpmastery"
-        minSdk 24
+        minSdk 26
         targetSdk 34
         versionCode 1
         versionName "2.0"
