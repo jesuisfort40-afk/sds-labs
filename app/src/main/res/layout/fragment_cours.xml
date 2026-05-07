@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#080c14">
+
+    <!-- Sidebar + Content in horizontal split on tablet, vertical on phone -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- Sidebar -->
+        <ScrollView
+            android:layout_width="220dp"
+            android:layout_height="match_parent"
+            android:background="#0d1424">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MODULE 03 — CONTRÔLE"
+                    android:textColor="#64748b"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.15"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/sidebarContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#1e2d45" />
+
+        <!-- Lesson Content -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Lesson Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="#080c14">
+
+                <TextView
+                    android:id="@+id/tvBreadcrumb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Module 03 › Leçon 3"
+                    android:textColor="#64748b"
+                    android:textSize="11sp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/tvLessonTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/tvLessonDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#64748b"
+                    android:textSize="13sp"
+                    android:lineSpacingMultiplier="1.4" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1e2d45" />
+
+            <!-- WebView for HTML lesson content -->
+            <ScrollView
+                android:id="@+id/lessonScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <WebView
+                        android:id="@+id/webViewLesson"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="300dp" />
+
+                    <!-- Navigation buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:justifyContent="space_between"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <Button
+                            android:id="@+id/btnPrevious"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="← Précédent"
+                            android:backgroundTint="#1e2d45"
+                            android:textColor="#e2e8f0"
+                            android:textSize="13sp" />
+
+                        <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/btnNext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Suivant → (+20 XP)"
+                            android:backgroundTint="#7c3aed"
+                            android:textColor="#FFFFFF"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

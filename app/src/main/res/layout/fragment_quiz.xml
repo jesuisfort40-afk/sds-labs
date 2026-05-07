@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#080c14">
+
+    <!-- Question Layout -->
+    <ScrollView
+        android:id="@+id/quizQuestionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Quiz — Module 03"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvQuizProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 / 6"
+                    android:textColor="#64748b"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Progress Bar -->
+            <ProgressBar
+                android:id="@+id/quizProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_gradient"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Question Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#0d1424"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvQuestionNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="QUESTION 1"
+                        android:textColor="#00d4ff"
+                        android:textSize="11sp"
+                        android:letterSpacing="0.15"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:id="@+id/tvQuestion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:lineSpacingMultiplier="1.4"
+                        android:layout_marginBottom="20dp" />
+
+                    <!-- Options -->
+                    <include android:id="@+id/option0" layout="@layout/item_quiz_option" />
+                    <View android:layout_width="match_parent" android:layout_height="8dp" />
+                    <include android:id="@+id/option1" layout="@layout/item_quiz_option" />
+                    <View android:layout_width="match_parent" android:layout_height="8dp" />
+                    <include android:id="@+id/option2" layout="@layout/item_quiz_option" />
+                    <View android:layout_width="match_parent" android:layout_height="8dp" />
+                    <include android:id="@+id/option3" layout="@layout/item_quiz_option" />
+
+                    <!-- Feedback -->
+                    <LinearLayout
+                        android:id="@+id/feedbackBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="14dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_card_dark"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/feedbackTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="✅ Correct !"
+                            android:textColor="#10b981"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/feedbackExplanation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#e2e8f0"
+                            android:textSize="13sp"
+                            android:lineSpacingMultiplier="1.5" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Next button -->
+            <Button
+                android:id="@+id/btnNextQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="Question suivante →"
+                android:backgroundTint="#7c3aed"
+                android:textColor="#FFFFFF"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Result Layout -->
+    <ScrollView
+        android:id="@+id/quizResultLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="32dp">
+
+            <TextView
+                android:id="@+id/tvResultStars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⭐⭐⭐"
+                android:textSize="40sp"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/tvResultScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100%"
+                android:textColor="#00d4ff"
+                android:textSize="64sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvResultDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6/6 bonnes réponses"
+                android:textColor="#64748b"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tvResultXp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+50 XP Bonus !"
+                android:textColor="#10b981"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/tvResultMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Excellent !"
+                android:textColor="#64748b"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.5"
+                android:layout_marginBottom="32dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnRetryQuiz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="↺ Recommencer"
+                    android:backgroundTint="#1e2d45"
+                    android:textColor="#e2e8f0"
+                    android:layout_marginEnd="12dp" />
+
+                <Button
+                    android:id="@+id/btnGoTerminal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚡ Terminal"
+                    android:backgroundTint="#7c3aed"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

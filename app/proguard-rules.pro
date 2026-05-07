@@ -1,0 +1,4 @@
+-keep class com.sdslabs.phpmastery.** { *; }
+-keepattributes *Annotation*
+-dontwarn okhttp3.**
+-dontwarn okio.**

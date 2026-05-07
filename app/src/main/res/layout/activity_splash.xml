@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#080c14">
+
+    <!-- Orb background -->
+    <View
+        android:id="@+id/splashOrb"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_orb"
+        android:alpha="0.5" />
+
+    <!-- Center content -->
+    <LinearLayout
+        android:id="@+id/splashLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp">
+
+        <!-- Logo Badge -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:background="@drawable/bg_logo_badge">
+
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="SDS"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_logo_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LABS"
+                android:textColor="#00d4ff"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.2"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PHP\nMASTERY"
+            android:textColor="#FFFFFF"
+            android:textSize="56sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:lineSpacingMultiplier="0.9"
+            android:layout_marginTop="24dp" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEARN · BUILD · MASTER"
+            android:textColor="#64748b"
+            android:textSize="12sp"
+            android:letterSpacing="0.2"
+            android:layout_marginTop="8dp" />
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/splashProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="48dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_gradient" />
+
+        <!-- Version -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="v2.0 — Édition Premium"
+            android:textColor="#64748b"
+            android:textSize="11sp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+
+</FrameLayout>

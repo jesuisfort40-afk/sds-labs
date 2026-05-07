@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#0d1424"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvModuleNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MODULE 01"
+            android:textColor="#64748b"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/tvModuleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/tvModuleDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#64748b"
+            android:textSize="12sp"
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/tvModuleTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#00d4ff"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:background="@drawable/bg_tag" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
