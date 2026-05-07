@@ -20,30 +20,18 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.2'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      - name: Install Gradle 8.2
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.2-bin.zip
+          unzip -q gradle-8.2-bin.zip
+          echo "$PWD/gradle-8.2/bin" >> $GITHUB_PATH
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --no-daemon
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+        run: gradle assembleDebug --stacktrace --no-daemon
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -53,9 +41,7 @@ jobs:
           retention-days: 30
 
       - name: Build Release APK (unsigned)
-        run: ./gradlew assembleRelease --stacktrace --no-daemon
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+        run: gradle assembleRelease --stacktrace --no-daemon
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
@@ -64,15 +50,14 @@ jobs:
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           retention-days: 30
 
-      - name: Create Release Tag (on main only)
+      - name: Create Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.run_number }}
           name: "SDS Labs v${{ github.run_number }}"
-          body: "Automatic build from commit ${{ github.sha }}"
-          files: |
-            app/build/outputs/apk/debug/app-debug.apk
+          body: "Build automatique — commit ${{ github.sha }}"
+          files: app/build/outputs/apk/debug/app-debug.apk
           draft: false
           prerelease: false
         env:
