@@ -1,234 +1,182 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#080c14">
+package com.sdslabs.phpmastery.ui.quiz
 
-    <!-- Question Layout -->
-    <ScrollView
-        android:id="@+id/quizQuestionLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+import android.graphics.Color
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.sdslabs.phpmastery.MainActivity
+import com.sdslabs.phpmastery.R
+import com.sdslabs.phpmastery.databinding.FragmentQuizBinding
+import com.sdslabs.phpmastery.model.LessonData
+import com.sdslabs.phpmastery.model.QuizQuestion
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+class QuizFragment : Fragment() {
 
-            <!-- Header -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+    private var _binding: FragmentQuizBinding? = null
+    private val binding get() = _binding!!
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Quiz — Module 03"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+    private var currentQuestionIndex = 0
+    private var score = 0
+    private var answered = false
+    private val questions = LessonData.quizQuestions
+    private val letters = listOf("A", "B", "C", "D")
 
-                <TextView
-                    android:id="@+id/tvQuizProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 / 6"
-                    android:textColor="#64748b"
-                    android:textSize="12sp" />
-            </LinearLayout>
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentQuizBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-            <!-- Progress Bar -->
-            <ProgressBar
-                android:id="@+id/quizProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progress_gradient"
-                android:layout_marginBottom="24dp" />
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        resetQuiz()
+    }
 
-            <!-- Question Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#0d1424"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+    private fun resetQuiz() {
+        currentQuestionIndex = 0
+        score = 0
+        answered = false
+        showQuestion()
+        binding.quizResultLayout.visibility = View.GONE
+        binding.quizQuestionLayout.visibility = View.VISIBLE
+    }
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+    private fun showQuestion() {
+        if (currentQuestionIndex >= questions.size) {
+            showResult()
+            return
+        }
 
-                    <TextView
-                        android:id="@+id/tvQuestionNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="QUESTION 1"
-                        android:textColor="#00d4ff"
-                        android:textSize="11sp"
-                        android:letterSpacing="0.15"
-                        android:layout_marginBottom="12dp" />
+        val q = questions[currentQuestionIndex]
+        answered = false
 
-                    <TextView
-                        android:id="@+id/tvQuestion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        android:lineSpacingMultiplier="1.4"
-                        android:layout_marginBottom="20dp" />
+        // Progress
+        val pct = (currentQuestionIndex.toFloat() / questions.size * 100).toInt()
+        binding.quizProgressBar.progress = pct
+        binding.tvQuizProgress.text = "${currentQuestionIndex + 1} / ${questions.size}"
+        binding.tvQuestionNumber.text = "QUESTION ${currentQuestionIndex + 1}"
+        binding.tvQuestion.text = q.question
 
-                    <!-- Options -->
-                    <include android:id="@+id/option0" layout="@layout/item_quiz_option" />
-                    <View android:layout_width="match_parent" android:layout_height="8dp" />
-                    <include android:id="@+id/option1" layout="@layout/item_quiz_option" />
-                    <View android:layout_width="match_parent" android:layout_height="8dp" />
-                    <include android:id="@+id/option2" layout="@layout/item_quiz_option" />
-                    <View android:layout_width="match_parent" android:layout_height="8dp" />
-                    <include android:id="@+id/option3" layout="@layout/item_quiz_option" />
+        // Options
+        val optionViews = listOf(
+            binding.option0,
+            binding.option1,
+            binding.option2,
+            binding.option3
+        )
 
-                    <!-- Feedback -->
-                    <LinearLayout
-                        android:id="@+id/feedbackBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="14dp"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/bg_card_dark"
-                        android:visibility="gone">
+        optionViews.forEachIndexed { i, optionView ->
+            if (i < q.options.size) {
+                optionView.root.visibility = View.VISIBLE
+                optionView.tvOptionLetter.text = letters[i]
+                optionView.tvOptionText.text = q.options[i]
+                resetOptionStyle(optionView.root)
+                optionView.root.setOnClickListener {
+                    if (!answered) selectOption(i, q, optionViews)
+                }
+            } else {
+                optionView.root.visibility = View.GONE
+            }
+        }
 
-                        <TextView
-                            android:id="@+id/feedbackTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="✅ Correct !"
-                            android:textColor="#10b981"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:layout_marginBottom="8dp" />
+        binding.feedbackBox.visibility = View.GONE
+        binding.btnNextQuestion.visibility = View.GONE
+    }
 
-                        <TextView
-                            android:id="@+id/feedbackExplanation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#e2e8f0"
-                            android:textSize="13sp"
-                            android:lineSpacingMultiplier="1.5" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+    private fun selectOption(selectedIdx: Int, q: QuizQuestion, optionViews: List<com.sdslabs.phpmastery.databinding.ItemQuizOptionBinding>) {
+        answered = true
 
-            <!-- Next button -->
-            <Button
-                android:id="@+id/btnNextQuestion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="Question suivante →"
-                android:backgroundTint="#7c3aed"
-                android:textColor="#FFFFFF"
-                android:visibility="gone" />
+        optionViews.forEach { it.root.isClickable = false }
 
-        </LinearLayout>
-    </ScrollView>
+        if (selectedIdx == q.correctIndex) {
+            setOptionStyle(optionViews[selectedIdx].root, "correct")
+            score++
+            val xpManager = (requireActivity() as MainActivity).xpManager
+            xpManager.addXP(15)
+            (requireActivity() as MainActivity).updateXPDisplay()
+            binding.feedbackTitle.text = "✅ Correct !"
+            binding.feedbackTitle.setTextColor(Color.parseColor("#10b981"))
+            binding.feedbackBox.setBackgroundColor(Color.parseColor("#0A1F14"))
+        } else {
+            setOptionStyle(optionViews[selectedIdx].root, "wrong")
+            setOptionStyle(optionViews[q.correctIndex].root, "correct")
+            binding.feedbackTitle.text = "❌ Incorrect"
+            binding.feedbackTitle.setTextColor(Color.parseColor("#ef4444"))
+            binding.feedbackBox.setBackgroundColor(Color.parseColor("#1A0A0A"))
+        }
 
-    <!-- Result Layout -->
-    <ScrollView
-        android:id="@+id/quizResultLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        binding.feedbackExplanation.text = q.explanation
+        binding.feedbackBox.visibility = View.VISIBLE
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="32dp">
+        binding.btnNextQuestion.visibility = View.VISIBLE
+        binding.btnNextQuestion.text = if (currentQuestionIndex < questions.size - 1)
+            "Question suivante →"
+        else
+            "Voir les résultats ✓"
 
-            <TextView
-                android:id="@+id/tvResultStars"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⭐⭐⭐"
-                android:textSize="40sp"
-                android:layout_marginBottom="16dp" />
+        binding.btnNextQuestion.setOnClickListener {
+            currentQuestionIndex++
+            showQuestion()
+        }
+    }
 
-            <TextView
-                android:id="@+id/tvResultScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100%"
-                android:textColor="#00d4ff"
-                android:textSize="64sp"
-                android:textStyle="bold" />
+    private fun resetOptionStyle(view: View) {
+        view.setBackgroundColor(Color.parseColor("#111827"))
+        view.elevation = 0f
+    }
 
-            <TextView
-                android:id="@+id/tvResultDetail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6/6 bonnes réponses"
-                android:textColor="#64748b"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp" />
+    private fun setOptionStyle(view: View, type: String) {
+        when (type) {
+            "correct" -> view.setBackgroundColor(Color.parseColor("#0A2A1A"))
+            "wrong" -> view.setBackgroundColor(Color.parseColor("#2A0A0A"))
+            "selected" -> view.setBackgroundColor(Color.parseColor("#0A1929"))
+        }
+    }
 
-            <TextView
-                android:id="@+id/tvResultXp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+50 XP Bonus !"
-                android:textColor="#10b981"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
+    private fun showResult() {
+        binding.quizQuestionLayout.visibility = View.GONE
+        binding.quizResultLayout.visibility = View.VISIBLE
 
-            <TextView
-                android:id="@+id/tvResultMessage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Excellent !"
-                android:textColor="#64748b"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.5"
-                android:layout_marginBottom="32dp" />
+        val pct = (score.toFloat() / questions.size * 100).toInt()
+        val stars = when {
+            pct >= 80 -> "⭐⭐⭐"
+            pct >= 50 -> "⭐⭐"
+            else -> "⭐"
+        }
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+        binding.tvResultStars.text = stars
+        binding.tvResultScore.text = "$pct%"
+        binding.tvResultDetail.text = "$score/${questions.size} bonnes réponses"
+        binding.tvResultMessage.text = when {
+            pct >= 80 -> "Excellent ! Vous maîtrisez ce module. 🎉"
+            pct >= 50 -> "Bien ! Relisez les points manqués."
+            else -> "Continuez à pratiquer, vous y arriverez !"
+        }
 
-                <Button
-                    android:id="@+id/btnRetryQuiz"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="↺ Recommencer"
-                    android:backgroundTint="#1e2d45"
-                    android:textColor="#e2e8f0"
-                    android:layout_marginEnd="12dp" />
+        if (pct >= 80) {
+            val xpManager = (requireActivity() as MainActivity).xpManager
+            xpManager.addXP(50)
+            (requireActivity() as MainActivity).updateXPDisplay()
+            binding.tvResultXp.text = "+50 XP Bonus !"
+            binding.tvResultXp.visibility = View.VISIBLE
+        } else {
+            binding.tvResultXp.visibility = View.GONE
+        }
 
-                <Button
-                    android:id="@+id/btnGoTerminal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="⚡ Terminal"
-                    android:backgroundTint="#7c3aed"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        // FIX: Use proper navigation, not JS querySelectorAll reference
+        binding.btnRetryQuiz.setOnClickListener { resetQuiz() }
+        binding.btnGoTerminal.setOnClickListener {
+            (requireActivity() as MainActivity).navigateTo(R.id.nav_terminal)
+        }
+    }
 
-</FrameLayout>
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
