@@ -14,7 +14,7 @@ class XPManager(context: Context) {
         private const val KEY_CURRENT_LESSON = "current_lesson"
     }
 
-    fun getXP(): Int = prefs.getInt(KEY_XP, 240)
+    fun getXP(): Int = prefs.getInt(KEY_XP, 0)
 
     fun addXP(amount: Int): Int {
         val newXP = getXP() + amount
@@ -23,7 +23,7 @@ class XPManager(context: Context) {
     }
 
     fun getCompletedLessons(): Set<String> =
-        prefs.getStringSet(KEY_COMPLETED_LESSONS, setOf("0", "1")) ?: setOf("0", "1")
+        prefs.getStringSet(KEY_COMPLETED_LESSONS, emptySet()) ?: emptySet()
 
     fun markLessonComplete(lessonIndex: Int) {
         val completed = getCompletedLessons().toMutableSet()
@@ -31,7 +31,7 @@ class XPManager(context: Context) {
         prefs.edit().putStringSet(KEY_COMPLETED_LESSONS, completed).apply()
     }
 
-    fun getCurrentLesson(): Int = prefs.getInt(KEY_CURRENT_LESSON, 2)
+    fun getCurrentLesson(): Int = prefs.getInt(KEY_CURRENT_LESSON, 0)
 
     fun setCurrentLesson(index: Int) {
         prefs.edit().putInt(KEY_CURRENT_LESSON, index).apply()
