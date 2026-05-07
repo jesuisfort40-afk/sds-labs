@@ -72,7 +72,7 @@ class QuizFragment : Fragment() {
 
         optionViews.forEachIndexed { i, optionView ->
             if (i < q.options.size) {
-                optionView.visibility = View.VISIBLE
+                optionView.root.visibility = View.VISIBLE
                 optionView.tvOptionLetter.text = letters[i]
                 optionView.tvOptionText.text = q.options[i]
                 resetOptionStyle(optionView.root)
@@ -80,7 +80,7 @@ class QuizFragment : Fragment() {
                     if (!answered) selectOption(i, q, optionViews)
                 }
             } else {
-                optionView.visibility = View.GONE
+                optionView.root.visibility = View.GONE
             }
         }
 
